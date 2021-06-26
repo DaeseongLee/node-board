@@ -1,7 +1,13 @@
-<h1>
-    {{message}}
-</h1>
-<h2>
-    {{error.status}}
-</h2>
-<pre>{{error.stack}}</pre>
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="bg-gray-800 w-full flex flex-col px-5 items-center mt-10 lg:mt-28 rounded-xl">
+    <h1 class="text-sm xl:text-2xl text-red-700">
+        {{message}}
+    </h1>
+    <h2 class="text-7xl mb-10">
+        {{error.status}}
+    </h2>
+    <pre class="w-full text-white overflow-auto">{{error.stack}}</pre>
+</div>
+{% endblock %}
