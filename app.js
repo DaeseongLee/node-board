@@ -1,10 +1,10 @@
 const express = require('express');
-
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const dotenv = require('dotenv');
 const path = require('path');
+const nunjucks = require('nunjucks');
 
 const userRouter = require('./routes/user');
 const boardRouter = require('./routes/board');
@@ -12,6 +12,14 @@ const boardRouter = require('./routes/board');
 dotenv.config();
 const app = express();
 app.set('port', process.env.PORT || 3000);
+
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+    express: app,
+    watch: true,
+});
+
+
 
 app.use(morgan('dev'));
 app.use('/', express.static(path.join(__dirname, 'public')));
@@ -43,7 +51,7 @@ app.use('/board', boardRouter);
 
 
 app.get('/', (req, res) => {
-    res.send('방가방가');
+    res.render('index', { title: 'Express' });
 });
 
 app.use((error, req, res, next) => {
