@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="formWrapper">
+    <h4 class="formTitle">
+        Login
+    </h4>
+    <form onSubmit={handleSubmit(onSubmit)} class="form" placeholder="ID">
+        <input class="input" type="text" name="id" placeholder="PASSWORD" />
+        <input class="input" type="password" name="password" />
+        <button class="btn">Login</button>
+    </form>
+    <div class="mb-4">
+        <span class="text-gray-100">Don't have an account??</span>
+        <a href="/user/join" class="text-blue-600 hover:underline">Create Account now</a>
+    </div>
+</div>
+{% endblock %}
