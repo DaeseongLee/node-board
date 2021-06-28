@@ -8,13 +8,13 @@
     <h4 class="formTitle">
         New Post
     </h4>
-    <form onSubmit={handleSubmit(onSubmit)} class="form" placeholder="ID">
+    <form class="form" placeholder="ID" action="/board/create" method="POST">
         <input class="input bg-gray-200 text-gray-700" placeholder="Writer" type="text" name="writer"
-            value="writer: asdasd" disabled>
-        <input class="input" placeholder="title" type="text" name="title">
-        <textarea class="input h-60" placeholder="Describe everything about this post here"
-            name="description"></textarea>
-        <input class="input" type="password" placeholder="Password" name="password">
+            value="writer: {{user.id}}" disabled>
+        <input class="input" placeholder="title" type="text" name="title" maxlength="20" required>
+        <textarea class="input h-60" placeholder="Describe everything about this post here" name="description" required
+            maxlength="100"></textarea>
+        <input class="input" type="password" placeholder="Password" name="password" required>
         <button class="btn">글쓰기</button>
     </form>
 </div>

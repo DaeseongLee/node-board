@@ -3,26 +3,29 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const dotenv = require('dotenv');
+const passport = require('passport');
 const path = require('path');
 const nunjucks = require('nunjucks');
 
 const connect = require('./schema');
-
+const pageRouter = require('./routes/page');
 const userRouter = require('./routes/user');
 const boardRouter = require('./routes/board');
 
 dotenv.config();
+connect();
+const passportConfig = require('./passport');
+
 const app = express();
+passportConfig();
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
     express: app,
     watch: true,
 });
-connect();
 
-
-
+//middleware
 app.use(morgan('dev'));
 app.use('/', express.static(path.join(__dirname, 'public')));
 
@@ -40,16 +43,16 @@ app.use(session({
     },
     name: 'session-cookie',
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
+//router
+app.use('/', pageRouter);
 app.use('/user', userRouter);
 app.use('/board', boardRouter);
 
-
-app.get('/', (req, res) => {
-    res.render('index');
-});
-
+//error router
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다!!`);
     error.status = 404;

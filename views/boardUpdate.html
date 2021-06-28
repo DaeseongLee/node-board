@@ -4,8 +4,7 @@
 
 <script defer>
     function boardUpdate() {
-        alert('수정');
-        location.href = "/board/update/:id"
+        location.href = "/board/:id/update";
     }
     function boardDelete() {
         alert('삭제');
@@ -21,13 +20,13 @@
                 <div class="p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">제목</p>
                     <input class="text-3xl text-gray-900 border-4 border-black p-2 rounded-md w-full"
-                        value="$750,000" />
-                    <p class="text-gray-700"><span class="text-xs font-bold mr-1">작성자:</span>이대성</p>
+                        value="{{board.title}}" />
+                    <p class="text-gray-700"><span class="text-xs font-bold mr-1">작성자:</span>{{board.writer.id}}</p>
                 </div>
                 <div class="h-56 p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">내용</p>
                     <textarea
-                        class="text-gray-700 border-4 border-black p-2 rounded-md w-full h-3/4">글내용입닙니담ㄴㄻㄴ엡ㅈ다머.,ㅋ차ㅣ;먼아ㅓㅂㅈㄷ이대성</textarea>
+                        class="text-gray-700 border-4 border-black p-2 rounded-md w-full h-3/4">{{board.description}}</textarea>
                 </div>
 
                 <div class="p-4">

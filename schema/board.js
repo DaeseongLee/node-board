@@ -2,7 +2,13 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const { Types: { ObjectId } } = Schema;
 const boardSchema = new Schema({
+    id: {
+        type: String,
+        required: true,
+        unique: true
+    },
     writer: {
         type: ObjectId,
         required: true,

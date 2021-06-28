@@ -4,8 +4,7 @@
 
 <script defer>
     function boardUpdate() {
-        alert('수정');
-        location.href = "/board/update/:id"
+        location.href = "/board/update"
     }
 </script>
 
@@ -16,12 +15,30 @@
             <div class="w-full bg-white shadow-xl rounded-lg overflow-hidden">
                 <div class="p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">제목</p>
-                    <p class="text-3xl text-gray-900">$750,000</p>
-                    <p class="text-gray-700"><span class="text-xs font-bold mr-1">작성자:</span>이대성</p>
+                    <p class="text-3xl text-gray-900">{{board.title}}</p>
+
+                </div>
+                <div class="p-4 flex flex-col md:flex-row xl:flex-row justify-start">
+                    <div class="flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="w-36">{{moment(board.createdAt).format('YYYY-MM-DD HH:mm')}}</p>
+                    </div>
+                    <div class="flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <p class="">{{board.writer.id}}</p>
+                    </div>
                 </div>
                 <div class="h-56 p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">내용</p>
-                    <p class="text-gray-700 h-60">글내용입닙니담ㄴㄻㄴ엡ㅈ다머.,ㅋ차ㅣ;먼아ㅓㅂㅈㄷ이대성</p>
+                    <p class="text-gray-700 h-60">{{board.description}}</p>
                 </div>
 
                 <div class="flex justify-around p-4 border-t border-gray-300 text-gray-700">

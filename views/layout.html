@@ -7,12 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HangHae Node</title>
     <link href="/styles/styles.css" rel="stylesheet">
+    <script src="/script/user.js" defer></script>
+    <script src="/script/board.js" defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
 </head>
 
 <body>
-    <div class="h-full md:h-screen xl:h-screen   bg-gray-200">
-        <div class="h-full md:h-screen xl:h-screen bg-blue-200 max-w-4xl m-auto rounded-xl">
-            <div class="h-full md:h-screen xl:h-screen w-full flex flex-col items-center">
+    <div class="h-full">
+        <div class="h-full max-w-4xl m-auto rounded-xl">
+            <div class="h-full w-full flex flex-col items-center">
                 {% block content %}
                 {% endblock %}
             </div>

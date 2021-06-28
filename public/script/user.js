@@ -1,7 +1,6 @@
 
 async function createAccount(event) {
     event.preventDefault();
-
     const id = document.querySelector('#id').value;
     const password = document.querySelector('#password').value;
     const passwordConfirm = document.querySelector('#passwordConfirm').value;
@@ -34,4 +33,27 @@ function isValid(id, password, passwordConfirm) {
         msg = "password가 일치 해야 합니다.";
     };
     return msg;
+}
+
+async function login(event) {
+    event.preventDefault();
+    const id = document.querySelector('#id').value;
+    const password = document.querySelector('#password').value;
+    const vaildMessage = isValid(id, password, password);
+    if (vaildMessage !== 'ok') {
+        alert(vaildMessage);
+        return;
+    };
+
+    try {
+        const result = await axios.post('/user/login', { id, password });
+        if (result.data.message) {
+            alert(result.data.message);
+            return;
+        }
+        location.href = '/';
+    } catch (error) {
+        console.error(error);
+    }
+
 }
