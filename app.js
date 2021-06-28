@@ -6,18 +6,20 @@ const dotenv = require('dotenv');
 const path = require('path');
 const nunjucks = require('nunjucks');
 
+const connect = require('./schema');
+
 const userRouter = require('./routes/user');
 const boardRouter = require('./routes/board');
 
 dotenv.config();
 const app = express();
 app.set('port', process.env.PORT || 3000);
-
 app.set('view engine', 'html');
 nunjucks.configure('views', {
     express: app,
     watch: true,
 });
+connect();
 
 
 
@@ -45,7 +47,7 @@ app.use('/board', boardRouter);
 
 
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Express' });
+    res.render('index');
 });
 
 app.use((req, res, next) => {
