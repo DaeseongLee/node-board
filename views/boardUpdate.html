@@ -3,11 +3,48 @@
 {% block content %}
 
 <script defer>
-    function boardUpdate() {
-        location.href = "/board/:id/update";
+    async function boardUpdate(id) {
+        try {
+            const title = document.querySelector('#title').value;
+            const description = document.querySelector('#description').value;
+            const password = document.querySelector('#password').value;
+            const result = await axios({
+                method: "patch",
+                url: `/board/${id}/update`,
+                data: { title, description, password },
+            });
+
+            if (result.data.ok) {
+                location.href = result.data.url;
+            } else {
+                alert(result.data.message);
+            };
+
+        } catch (error) {
+            console.error(error);
+        };
     }
-    function boardDelete() {
-        alert('삭제');
+    async function boardDelete(id) {
+        try {
+
+            const password = document.querySelector('#password').value;
+
+
+            // const result = await axios.delete(`/board/${id}/delete`, {password});
+
+            const result = await axios({
+                method: "delete",
+                url: `/board/${id}/delete`,
+                data: { password },
+            });
+            if (result.data.ok) {
+                location.href = result.data.url;
+            } else {
+                alert(result.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
 
     }
 </script>
@@ -19,22 +56,24 @@
             <div class="w-full bg-white shadow-xl rounded-lg overflow-hidden">
                 <div class="p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">제목</p>
-                    <input class="text-3xl text-gray-900 border-4 border-black p-2 rounded-md w-full"
-                        value="{{board.title}}" />
+                    <input class="text-3xl text-gray-900 border-4 border-black p-2 rounded-md w-full" id="title"
+                        name="title" value="{{board.title}}" />
                     <p class="text-gray-700"><span class="text-xs font-bold mr-1">작성자:</span>{{board.writer.id}}</p>
                 </div>
                 <div class="h-56 p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">내용</p>
-                    <textarea
-                        class="text-gray-700 border-4 border-black p-2 rounded-md w-full h-3/4">{{board.description}}</textarea>
+                    <textarea class="text-gray-700 border-4 border-black p-2 rounded-md w-full h-3/4" name="description"
+                        id="description">{{board.description}}</textarea>
                 </div>
 
                 <div class="p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">비밀번호</p>
-                    <input type="password" class="text-gray-700 border-4 border-black p-2 rounded-md w-full"></input>
+                    <input type="password" class="text-gray-700 border-4 border-black p-2 rounded-md w-full"
+                        name="password" id="password"></input>
                 </div>
-                <div class="flex flex-col xl:flex-row justify-around p-4 border-t border-gray-300 text-gray-700">
-                    <button onClick="boardUpdate()" class="enterBtn xl:flex">
+                <div class="flex flex-col xl:flex-row justify-around p-4 border-t border-gray-300 text-gray-700"
+                    disabled>
+                    <button onClick="boardUpdate('{{board.id}}')" class="enterBtn xl:flex">
                         <span class="text-blue-400 hover:text-blue-500 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -44,7 +83,7 @@
                         </span>
                         <span>수정완료</span>
                     </button>
-                    <button onClick="boardDelete()" class="enterBtn xl:flex">
+                    <button onClick="boardDelete('{{board.id}}')" class="enterBtn xl:flex">
                         <span class="text-red-400 hover:text-red-500 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">

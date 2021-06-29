@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extend: false }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
+const sessionOption = {
     resave: false,
     saveUninitialized: false,
     secret: process.env.COOKIE_SECRET,
@@ -42,7 +42,13 @@ app.use(session({
         secure: false,
     },
     name: 'session-cookie',
-}));
+};
+//https 적용할때만
+// if (process.env.NODE_ENV === 'production') {
+//     sessionOption.proxy = true;
+//     sessionOption.cookie.secure = true;
+// }
+app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -64,8 +70,7 @@ app.use((error, req, res, next) => {
     res.locals.error = process.env.NODE_ENV !== 'production' ? error : {};
     res.status(error.status || 500);
     res.render('error');
-})
-
+});
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트 대기중....');

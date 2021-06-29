@@ -39,20 +39,27 @@ router.get('/join', isNotLoggedIn, (req, res) => {
 });
 
 
-router.get('/board/create', isLoggedIn, (req, res) => {
+router.get('/create', isLoggedIn, (req, res) => {
     res.render('createBoard');
 });
 
 
 
 //게시글 수정
-router.get('/board/update', isLoggedIn, (req, res) => {
+router.get('/update', isLoggedIn, (req, res, next) => {
+
     const board = app.get("board");
-    res.render('boardUpdate', { board });
+    if (req.user.id !== board.writer.id) {
+        const error = new Error("접근권한이 없습니다.");
+        error.status = 403;
+        next(error);
+    } else {
+        res.render('boardUpdate', { board });
+    }
 });
 
 //게시글 디테일
-router.get('/board/:id', isLoggedIn, async (req, res, next) => {
+router.get('/:id', isLoggedIn, async (req, res, next) => {
     const { id } = req.params;
     try {
         const board = await Board.findOne({ id }).populate('writer');
@@ -61,9 +68,8 @@ router.get('/board/:id', isLoggedIn, async (req, res, next) => {
     } catch (error) {
         console.error(error);
         next(error)
-    }
-
-})
+    };
+});
 
 
 
