@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production PORT=80 npm run tailwind:build & pm2 start app.js",
-    "dev": "npm run tailwind:build & nodemon app",
+    "start": "cross-env NODE_ENV=production PORT=80 pm2 start app.js",
+    "dev": "cross-env NODE_ENV=dev nodemon app",
     "tailwind:build": "npx tailwindcss -i ./styles/tailwind.css -o ./public/styles/styles.css"
   },
   "repository": {
