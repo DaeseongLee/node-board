@@ -8,10 +8,12 @@
             const title = document.querySelector('#title').value;
             const description = document.querySelector('#description').value;
             const password = document.querySelector('#password').value;
+            const url = document.querySelector('#img-url').value;
+
             const result = await axios({
                 method: "patch",
                 url: `/board/${id}/update`,
-                data: { title, description, password },
+                data: { title, description, password, url },
             });
 
             if (result.data.ok) {
@@ -54,6 +56,28 @@
     <div class="flex items-center justify-center w-4/5">
         <div class="form">
             <div class="w-full bg-white shadow-xl rounded-lg overflow-hidden">
+
+                <div class="grid grid-cols-1 space-y-2">
+                    <label class="text-sm font-bold text-gray-500 tracking-wide">Attach Document</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label
+                            class="flex flex-col rounded-lg border-4 border-dashed w-full h-60 p-10 group text-center">
+                            <div class="h-full w-full text-center flex flex-col items-center justify-center">
+                                <div class="flex flex-auto max-h-48 w-2/5 mx-auto -mt-10">
+                                    <img id="img-preview" class="h-36 object-center" src="{{board.url}}"
+                                        alt="freepik image">
+                                </div>
+                                <p class="pointer-none text-gray-500 ">
+                                    <span class="text-blue-600 hover:underline">select a file</span> from your computer
+                                </p>
+                            </div>
+                            <input id="img" type="file" class="hidden" accept="image/*">
+                            <input id="img-url" class="hidden" name="url">
+                        </label>
+                    </div>
+                </div>
+
+
                 <div class="p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">제목</p>
                     <input class="text-3xl text-gray-900 border-4 border-black p-2 rounded-md w-full" id="title"

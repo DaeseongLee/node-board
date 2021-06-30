@@ -14,7 +14,6 @@ const router = express.Router();
 
 router.use((req, res, next) => {
     res.locals.user = req.user;
-    res.locals.boards = req.board;
     next();
 });
 

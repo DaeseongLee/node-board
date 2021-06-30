@@ -13,6 +13,17 @@
     <div class="flex items-center justify-center w-4/5">
         <div class="form">
             <div class="w-full bg-white shadow-xl rounded-lg overflow-hidden">
+                <div class="grid grid-cols-1 space-y-2">
+                    <label class="text-sm font-bold text-gray-500 tracking-wide">Attach Document</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label class="rounded-lg border-4 border-dashed w-full h-full">
+                            <div>
+                                <img id="img-preview" class="h-full w-full object-center" src="{{board.url}}"
+                                    alt="freepik image">
+                            </div>
+                        </label>
+                    </div>
+                </div>
                 <div class="p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">제목</p>
                     <p class="text-3xl text-gray-900">{{board.title}}</p>

@@ -26,6 +26,11 @@ const boardSchema = new Schema({
         type: String,
         required: true,
     },
+    url: {
+        type: String,
+        required: false,
+        default: "/img/default.jpg"
+    },
     createdAt: {
         type: Date,
         default: Date.now()
