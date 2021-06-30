@@ -13,6 +13,7 @@ async function createAccount(event) {
         const result = await axios.post('/user/join', { id, password });
         if (result.data === 'ok') {
             alert('회원가입을 하였습니다.');
+
             location.href = "/login";
         } else {
             alert('이미 존재하는 아이디 입니다.');
@@ -51,7 +52,8 @@ async function login(event) {
             alert(result.data.message);
             return;
         }
-        location.href = '/';
+        location.replace("/");
+        // location.href = '/';
     } catch (error) {
         console.error(error);
     }

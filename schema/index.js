@@ -5,7 +5,6 @@ const connect = () => {
         mongoose.set('debug', true);
     }
 
-    console.log("env!!!!!!!!!!!!!!!!!!", process.env.NODE_ENV)
     if (process.env.NODE_ENV == 'production') {
         mongoose.connect('mongodb://localhost:27017/admin', {
             dbName: 'spartaNode1',
