@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 const Board = require('../schema/board');
+const { listenerCount } = require('events');
 
 const router = express.Router();
 
@@ -39,9 +40,10 @@ router.post('/create/img', upload.single('img'), async (req, res, next) => {
 const upload2 = multer();
 router.post('/create', upload2.none(), async (req, res, next) => {
     try {
-        const { title, description, password, url } = req.body;
+        let { title, description, password, url } = req.body;
         const writer = req.user;
 
+        url = url || "/img/default.jpg";
         const hash = await bcrypt.hash(password, 12);
         const board = await Board.create({
             id: uuidv4(),
