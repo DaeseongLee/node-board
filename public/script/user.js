@@ -14,7 +14,7 @@ async function createAccount(event) {
         if (result.data === 'ok') {
             alert('회원가입을 하였습니다.');
 
-            location.href = "/login";
+            location.replace("/login");
         } else {
             alert('이미 존재하는 아이디 입니다.');
         }
