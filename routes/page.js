@@ -1,5 +1,7 @@
 const express = require('express');
 const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault("Asia/Seoul");
 
 const app = express();
 
