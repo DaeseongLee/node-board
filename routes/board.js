@@ -6,9 +6,9 @@ const path = require('path');
 const fs = require('fs');
 
 const Board = require('../schema/board');
-const { listenerCount } = require('events');
 
 const router = express.Router();
+
 
 try {
     fs.readdirSync('uploads');

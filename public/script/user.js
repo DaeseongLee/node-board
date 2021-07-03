@@ -38,6 +38,7 @@ function isValid(id, password, passwordConfirm) {
 
 async function login(event) {
     event.preventDefault();
+
     const id = document.querySelector('#id').value;
     const password = document.querySelector('#password').value;
     const vaildMessage = isValid(id, password, password);
@@ -52,10 +53,11 @@ async function login(event) {
             alert(result.data.message);
             return;
         }
-        location.replace("/");
+        localStorage.setItem('token', result.data.token);
+        console.log(localStorage.getItem('token'));
+        location.replace("/board.html");
         // location.href = '/';
     } catch (error) {
         console.error(error);
     }
-
 }

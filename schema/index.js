@@ -20,7 +20,6 @@ const connect = () => {
             }
         });
     } else {
-        console.log("여기는 dev");
         mongoose.connect('mongodb://localhost:27017/admin', {
             dbName: 'spartaNode1',
             useNewUrlParser: true,
