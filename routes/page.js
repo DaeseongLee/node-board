@@ -11,13 +11,8 @@ const Board = require('../schema/board');
 const router = express.Router();
 
 
-router.use((req, res, next) => {
-    // console.log("req.locals.user", req.locals.user);
-    next();
-});
 
 router.get('/', async (req, res) => {
-
     try {
         const boards = await Board.find({}).populate('writer').sort({ createdAt: -1 });
         res.render('board', { boards, moment });
@@ -25,22 +20,9 @@ router.get('/', async (req, res) => {
         console.error(error);
         next(error);
     }
-
-
-    // if (req.user) {
-    //     try {
-    //         const boards = await Board.find({}).populate('writer').sort({ createdAt: -1 });
-    //         res.render('board', { boards, moment });
-    //     } catch (error) {
-    //         console.error(error);
-    //         next(error);
-    //     }
-    // } else {
-    //     res.render('login');
-    // }
 });
 
-router.get('/login', (req, res) => {
+router.get('/login', isNotLoggedIn, (req, res) => {
     res.render('login');
 });
 
@@ -49,7 +31,7 @@ router.get('/join', (req, res) => {
 });
 
 
-router.get('/create', (req, res) => {
+router.get('/create', isNotLoggedIn, (req, res) => {
     res.render('createBoard');
 });
 

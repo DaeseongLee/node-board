@@ -1,5 +1,6 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
+const passport = require('passport');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
@@ -9,6 +10,11 @@ const Board = require('../schema/board');
 
 const router = express.Router();
 
+
+router.use((req, res, next) => {
+    passport.authenticate('jwt', { session: false });
+    next();
+});
 
 try {
     fs.readdirSync('uploads');
@@ -29,7 +35,6 @@ const upload = multer({
     }),
     limits: { fileSize: 5 * 1024 * 1024 },
 });
-
 
 router.post('/create/img', upload.single('img'), async (req, res, next) => {
     console.log(req.file);

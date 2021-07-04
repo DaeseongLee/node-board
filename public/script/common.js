@@ -3,12 +3,17 @@ async function auth() {
         const result = await axios.get('/user/me', {
             headers: { "authorization": `${localStorage.getItem("token")}` }
         });
+        console.log(result);
+        const logoutbtnText = document.querySelector("#logoutText");
+        const logoutbtn = document.querySelector("#loginOrlogout");
 
-        const logoutbtn = document.querySelector("#logoutText");
         if (!result.data.user) {
-            logoutbtn.textContent = 'LogIn'
+            logoutbtnText.textContent = 'LogIn'
+            logoutbtn.addEventListener('click', loginForm);
+
         } else {
-            logoutbtn.textContent = 'LogOut'
+            logoutbtnText.textContent = 'LogOut'
+            logoutbtn.addEventListener('click', logout);
         }
 
     } catch (error) {

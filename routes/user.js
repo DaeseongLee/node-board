@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const bycrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const app = express();
 
 
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
@@ -12,7 +13,6 @@ const router = express.Router();
 
 const authenticateJWT = (req, res, next) =>
     passport.authenticate("jwt", { sessions: false }, (error, user) => {
-        //verifyUser에서 user를 찾았다면 서버에게 요청하는 req객체의 user에 담아서 서버에게 넘겨줌
         if (user) {
             req.user = user;
         }
@@ -22,8 +22,8 @@ const authenticateJWT = (req, res, next) =>
 
 
 router.get('/me', authenticateJWT, (req, res) => {
-    console.log(req.user)
-    console.log("여기 안들어놔");
+    res.cookie("user", req.user);
+    res.json({ "user": req.user });
 });
 
 
@@ -75,10 +75,8 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
     };
 });
 
-router.get('/logout', isLoggedIn, (req, res) => {
-    req.logout();
-    req.session.destroy();
-    res.redirect('/');
+router.get('/logout', (req, res) => {
+    res.clearCookie('user').redirect('/login');
 });
 
 module.exports = router;

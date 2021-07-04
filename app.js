@@ -59,7 +59,7 @@ passportConfig();
 //router
 app.use('/', pageRouter);
 app.use('/user', userRouter);
-app.use('/board', passport.authenticate('jwt', { session: false }), boardRouter);
+app.use('/board', boardRouter);
 
 //error router
 app.use((req, res, next) => {

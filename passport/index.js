@@ -28,9 +28,9 @@ const JWTConfig = { jwtFromRequest: ExtractJwt.fromHeader('authorization'), secr
 
 const JWTVerify = async (jwtPayload, done) => {
     try {
-        console.log("jwtPayLoad", jwtPayload);
-        const user = await User.findOne({ id: jwtPayload.id });
 
+        const user = await User.findOne({ id: jwtPayload.id });
+        console.log("user!!", user);
         if (user) {
             done(null, user);
         } else {
