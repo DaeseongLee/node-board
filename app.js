@@ -11,13 +11,15 @@ const connect = require('./schema');
 const pageRouter = require('./routes/page');
 const userRouter = require('./routes/user');
 const boardRouter = require('./routes/board');
+const passportConfig = require('./passport');
+
 
 dotenv.config();
 connect();
-const passportConfig = require('./passport');
 
 const app = express();
-passportConfig();
+
+
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
@@ -51,13 +53,13 @@ const sessionOption = {
 // }
 app.use(session(sessionOption));
 app.use(passport.initialize());
-app.use(passport.session());
+passportConfig();
 
 
 //router
 app.use('/', pageRouter);
 app.use('/user', userRouter);
-app.use('/board', boardRouter);
+app.use('/board', passport.authenticate('jwt', { session: false }), boardRouter);
 
 //error router
 app.use((req, res, next) => {

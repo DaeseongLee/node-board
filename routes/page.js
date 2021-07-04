@@ -11,36 +11,45 @@ const Board = require('../schema/board');
 const router = express.Router();
 
 
-
 router.use((req, res, next) => {
-    res.locals.user = req.user;
+    // console.log("req.locals.user", req.locals.user);
     next();
 });
 
 router.get('/', async (req, res) => {
-    if (req.user) {
-        try {
-            const boards = await Board.find({}).populate('writer').sort({ createdAt: -1 });
-            res.render('board', { boards, moment });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
-    } else {
-        res.render('login');
+
+    try {
+        const boards = await Board.find({}).populate('writer').sort({ createdAt: -1 });
+        res.render('board', { boards, moment });
+    } catch (error) {
+        console.error(error);
+        next(error);
     }
+
+
+    // if (req.user) {
+    //     try {
+    //         const boards = await Board.find({}).populate('writer').sort({ createdAt: -1 });
+    //         res.render('board', { boards, moment });
+    //     } catch (error) {
+    //         console.error(error);
+    //         next(error);
+    //     }
+    // } else {
+    //     res.render('login');
+    // }
 });
 
-router.get('/login', isNotLoggedIn, (req, res) => {
+router.get('/login', (req, res) => {
     res.render('login');
 });
 
-router.get('/join', isNotLoggedIn, (req, res) => {
+router.get('/join', (req, res) => {
     res.render('join');
 });
 
 
-router.get('/create', isLoggedIn, (req, res) => {
+router.get('/create', (req, res) => {
     res.render('createBoard');
 });
 

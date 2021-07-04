@@ -1,24 +1,48 @@
 const passport = require('passport');
-const local = require('./localStrategy');
+const LocalStrategy = require('passport-local').Strategy;
+const { ExtractJwt, Strategy: JWTStrategy } = require('passport-jwt');
 const User = require('../schema/user');
+const bcrypt = require('bcrypt');
+
+const passportConfig = { usernameField: 'id', passwordField: 'password' };
+
+const passportVerify = async (id, password, done) => {
+    try {
+        const existUser = await User.findOne({ id });
+        if (existUser) {
+            const result = await bcrypt.compare(password, existUser.password);
+            if (result) {
+                done(null, existUser);
+            } else {
+                done(null, false, { message: "비밀번호가 일치하지 않습니다." });
+            }
+        } else {
+            done(null, false, { message: "가입되지 않은 회원입니다." })
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const JWTConfig = { jwtFromRequest: ExtractJwt.fromHeader('authorization'), secretOrKey: "JWT_SECRET" };
+
+const JWTVerify = async (jwtPayload, done) => {
+    try {
+        console.log("jwtPayLoad", jwtPayload);
+        const user = await User.findOne({ id: jwtPayload.id });
+
+        if (user) {
+            done(null, user);
+        } else {
+            done(null, false, { message: "올바르지 않은 인증정보 입니다." });
+        }
+    } catch (error) {
+        console.error(error);
+        done(error);
+    }
+}
 
 module.exports = () => {
-    //로그인 시 실행.. req.session 객체에 어떤 데이터를 저장할 지 결정.
-    passport.serializeUser((user, done) => {
-        done(null, user.id);
-    });
-
-    //매 요청 시 실행.. passport.session() 미들웨어가 호출. 
-    //매개변수 id는 serializeUser의 done()에서 넣어준 user.id
-    //DB와 비교해서 있다면, 조회한 정보를 req.user 객체에 집어넣음.
-    passport.deserializeUser((id, done) => {
-        User.findOne({ id })
-            .then(user => done(null, user))
-            .catch(error => done(error));
-    });
-
-    local();
-
-    //정리하자면 serializeUser는 req.session에 사용자 정보를 넣는 것
-    //deserializeUser는  req.user를 만드는 것.
+    passport.use('local', new LocalStrategy(passportConfig, passportVerify));
+    passport.use('jwt', new JWTStrategy(JWTConfig, JWTVerify));
 }

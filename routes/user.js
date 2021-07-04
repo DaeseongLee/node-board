@@ -10,17 +10,20 @@ const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
+const authenticateJWT = (req, res, next) =>
+    passport.authenticate("jwt", { sessions: false }, (error, user) => {
+        //verifyUser에서 user를 찾았다면 서버에게 요청하는 req객체의 user에 담아서 서버에게 넘겨줌
+        if (user) {
+            req.user = user;
+        }
+        next();
+    })(req, res, next);
 
-router.get('/me', auth, (req, res, next) => {
-    const { id } = req.params;
-    try {
-        // const board = await Board.findOne({ id }).populate('writer');
-        // app.set("board", board);
-        // res.render('boardDetail', { board, moment });
-    } catch (error) {
-        console.error(error);
-        next(error)
-    };
+
+
+router.get('/me', authenticateJWT, (req, res) => {
+    console.log(req.user)
+    console.log("여기 안들어놔");
 });
 
 
@@ -44,40 +47,32 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
     }
 });
 
+
+
 router.post('/login', isNotLoggedIn, async (req, res, next) => {
-    const { id, password } = req.body;
+    try {
+        passport.authenticate('local', (error, user, info) => {
+            if (error) {
+                console.error(error);
+                return next(error);
+            };
+            if (!user) {
+                return res.json({ "message": `${info.message}` });
+            };
 
-    const user = await User.findOne({ id });
-
-    if (!user || !await bycrypt.compare(password, user.password)) {
-        res.json({ "ok": false, "message": "아이디 또는 패스워드가 틀렸습니다." });
-        return;
-    }
-
-    const token = jwt.sign({ user }, process.env.JWT_SECRET);
-
-    // req.login(user, );
-    res.json({ "ok": true, token: token });
-
-    //passport로 작성한 것.
-    // passport.authenticate('local', (error, user, info) => {
-    //     if (error) {
-    //         console.error(error);
-    //         return next(error);
-    //     };
-    //     if (!user) {
-    //         return res.json({ "message": `${info.message}` });
-    //     };
-
-    //     return req.login(user, (loginError) => {
-    //         if (loginError) {
-    //             console.error(loginError);
-    //             return next(loginError);
-    //         };
-
-    //         return res.redirect('/');
-    //     });
-    // })(req, res, next);
+            return req.login(user, { session: false }, (loginError) => {
+                if (loginError) {
+                    console.error(loginError);
+                    return next(loginError);
+                };
+                const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+                res.json({ token });
+            });
+        })(req, res);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    };
 });
 
 router.get('/logout', isLoggedIn, (req, res) => {

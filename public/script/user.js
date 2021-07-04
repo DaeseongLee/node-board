@@ -1,4 +1,7 @@
 
+
+
+
 async function createAccount(event) {
     event.preventDefault();
     const id = document.querySelector('#id').value;
@@ -49,15 +52,20 @@ async function login(event) {
 
     try {
         const result = await axios.post('/user/login', { id, password });
+        console.log(result);
         if (result.data.message) {
             alert(result.data.message);
             return;
         }
         localStorage.setItem('token', result.data.token);
-        console.log(localStorage.getItem('token'));
-        location.replace("/board.html");
-        // location.href = '/';
+
+        location.replace("/");
     } catch (error) {
         console.error(error);
     }
+}
+
+function logout() {
+    localStorage.clear();
+    location.href = "/login";
 }

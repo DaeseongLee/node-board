@@ -2,20 +2,6 @@
 
 {% block content %}
 
-<script defer>
-    window.onload = () => {
-        if (new URL(location.href).searchParams.get('error')) {
-            alert(new URL(location.href).searchParams.get('error'))
-        };
-    }
-
-    function enterDetail(id) {
-        location.href = `/${id}`
-    }
-</script>
-
-
-
 {% include "header.html" %}
 
 <div class="grid mt-8 gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-2">
@@ -93,5 +79,18 @@
     <div class="w-full items-center"><span>게시글이 비어 있습니다.</span></div>
     {% endif %}
 </div>
+<script>
+    window.onload = () => {
+        if (new URL(location.href).searchParams.get('error')) {
+            alert(new URL(location.href).searchParams.get('error'))
+        };
+    }
+
+    function enterDetail(id) {
+        location.href = `/${id}`
+    }
+    auth();
+</script>
+
 
 {% endblock %}
