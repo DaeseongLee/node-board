@@ -12,7 +12,6 @@ async function createAccount(event) {
         const result = await axios.post('/user/join', { nickname, password });
         if (result.data === 'ok') {
             alert('회원가입을 하였습니다.');
-
             location.replace("/login");
         } else {
             alert('이미 존재하는 아이디 입니다.');
@@ -38,24 +37,23 @@ function isValid(nickname, password, passwordConfirm) {
 async function login(event) {
     event.preventDefault();
 
-    const id = document.querySelector('#id').value;
+    const nickname = document.querySelector('#nickname').value;
     const password = document.querySelector('#password').value;
-    const vaildMessage = isValid(id, password, password);
+    const vaildMessage = isValid(nickname, password, password);
     if (vaildMessage !== 'ok') {
         alert(vaildMessage);
         return;
     };
 
     try {
-        const result = await axios.post('/user/login', { id, password });
-        console.log(result);
+        const result = await axios.post('/user/login', { nickname, password });
         if (result.data.message) {
             alert(result.data.message);
             return;
         }
         localStorage.setItem('token', result.data.token);
 
-        location.replace("/");
+        // location.replace("/");
     } catch (error) {
         console.error(error);
     }

@@ -1,15 +1,19 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { ExtractJwt, Strategy: JWTStrategy } = require('passport-jwt');
-const User = require('../schema/user');
+const User = require('../models/user');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-const passportConfig = { usernameField: 'id', passwordField: 'password' };
+const passportConfig = { usernameField: 'nickname', passwordField: 'password' };
 
-const passportVerify = async (id, password, done) => {
+const passportVerify = async (nickname, password, done) => {
     try {
-        const existUser = await User.findOne({ id });
+        const existUser = await User.findOne({
+            where: {
+                nickname
+            },
+        });
         if (existUser) {
             const result = await bcrypt.compare(password, existUser.password);
             if (result) {
@@ -29,10 +33,15 @@ const JWTConfig = { jwtFromRequest: ExtractJwt.fromHeader('authorization'), secr
 
 const JWTVerify = async (jwtPayload, done) => {
     try {
-
-        const user = await User.findOne({ id: jwtPayload.id });
+        console.log("jwtPayload....", jwtPayload);
+        const user = await User.findOne({
+            where: {
+                nickname: jwtPayload.nickname
+            }
+        });
+        console.log("user.......", user);
         if (user) {
-            done(null, user.id);
+            done(null, user.nickname);
         } else {
             done(null, false, { message: "올바르지 않은 인증정보 입니다." });
         }

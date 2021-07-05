@@ -3,7 +3,6 @@ async function auth() {
         const result = await axios.get('/user/me', {
             headers: { "authorization": `${localStorage.getItem("token")}` }
         });
-        console.log(result);
         const logoutbtnText = document.querySelector("#logoutText");
         const logoutbtn = document.querySelector("#loginOrlogout");
 

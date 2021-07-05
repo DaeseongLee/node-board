@@ -35,9 +35,9 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
                 nickname
             }
         })
-
+        console.log("existUser", existUser);
         if (existUser) {
-            res.status(400).json('nickname already exists');
+            res.json('nickname already exists');
             return;
         }
         const hash = await bycrypt.hash(password, 12);
@@ -70,7 +70,8 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
                     console.error(loginError);
                     return next(loginError);
                 };
-                const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+
+                const token = jwt.sign({ nickname: user.nickname }, process.env.JWT_SECRET);
                 res.json({ token });
             });
         })(req, res);
