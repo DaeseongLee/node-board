@@ -2,11 +2,12 @@ const express = require('express');
 const passport = require('passport');
 const bycrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-const app = express();
 
 
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const User = require('../schema/user');
+
+const User = require('../models/user');
+
 
 
 const router = express.Router();
@@ -28,15 +29,20 @@ router.get('/me', authenticateJWT, (req, res) => {
 
 router.post('/join', isNotLoggedIn, async (req, res, next) => {
     try {
-        const { id, password } = req.body;
-        const existUser = await User.findOne({ id });
+        const { nickname, password } = req.body;
+        const existUser = await User.findOne({
+            where: {
+                nickname
+            }
+        })
+
         if (existUser) {
-            res.status(400).json('ID Already exists');
+            res.status(400).json('nickname already exists');
             return;
         }
         const hash = await bycrypt.hash(password, 12);
         await User.create({
-            id,
+            nickname,
             password: hash
         });
         res.status(201).json('ok');

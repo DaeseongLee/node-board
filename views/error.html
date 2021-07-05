@@ -8,11 +8,17 @@
     <h2 class="text-7xl mb-10">
         {{error.status}}
     </h2>
+    {% if login %}
+    <a href="/login"
+        class="mb-10 bg-blue-600 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-gray-50 rounded-xl hover:shadow-lg">
+        Go to Login
+    </a>
+    {% else %}
     <a href="/"
         class="mb-10 bg-blue-600 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-gray-50 rounded-xl hover:shadow-lg">
         Go to Home
     </a>
-
+    {% endif %}
 </div>
 
 

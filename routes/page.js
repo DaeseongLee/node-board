@@ -56,7 +56,7 @@ router.get('/update', isLoggedIn, (req, res, next) => {
 });
 
 //게시글 디테일
-router.get('/:id', isLoggedIn, async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     const { id } = req.params;
     try {
         const board = await Board.findOne({ id }).populate('writer');

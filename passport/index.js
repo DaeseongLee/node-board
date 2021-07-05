@@ -3,6 +3,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const { ExtractJwt, Strategy: JWTStrategy } = require('passport-jwt');
 const User = require('../schema/user');
 const bcrypt = require('bcrypt');
+require('dotenv').config();
 
 const passportConfig = { usernameField: 'id', passwordField: 'password' };
 
@@ -24,7 +25,7 @@ const passportVerify = async (id, password, done) => {
     }
 };
 
-const JWTConfig = { jwtFromRequest: ExtractJwt.fromHeader('authorization'), secretOrKey: "JWT_SECRET" };
+const JWTConfig = { jwtFromRequest: ExtractJwt.fromHeader('authorization'), secretOrKey: process.env.JWT_SECRET };
 
 const JWTVerify = async (jwtPayload, done) => {
     try {

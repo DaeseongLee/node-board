@@ -1,19 +1,15 @@
-
-
-
-
 async function createAccount(event) {
     event.preventDefault();
-    const id = document.querySelector('#id').value;
+    const nickname = document.querySelector('#nickname').value;
     const password = document.querySelector('#password').value;
     const passwordConfirm = document.querySelector('#passwordConfirm').value;
-    const vaildMessage = isValid(id, password, passwordConfirm);
+    const vaildMessage = isValid(nickname, password, passwordConfirm);
     if (vaildMessage !== 'ok') {
         alert(vaildMessage);
         return;
     }
     try {
-        const result = await axios.post('/user/join', { id, password });
+        const result = await axios.post('/user/join', { nickname, password });
         if (result.data === 'ok') {
             alert('회원가입을 하였습니다.');
 
@@ -27,10 +23,10 @@ async function createAccount(event) {
 
 }
 
-function isValid(id, password, passwordConfirm) {
+function isValid(nickname, password, passwordConfirm) {
     let msg = "ok";
-    if (!id) {
-        msg = 'ID를 입력하세요.';
+    if (!nickname) {
+        msg = 'nickname을 입력하세요.';
     } else if (!password) {
         msg = "password를 입력하세요.";
     } else if (password !== passwordConfirm) {

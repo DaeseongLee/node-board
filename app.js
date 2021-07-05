@@ -1,21 +1,25 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
 const path = require('path');
 const nunjucks = require('nunjucks');
 
-const connect = require('./schema');
+
+const { sequelize } = require('./models');
+
+// const connect = require('./schema');
 const pageRouter = require('./routes/page');
 const userRouter = require('./routes/user');
 const boardRouter = require('./routes/board');
 const passportConfig = require('./passport');
 
 
+
+
 dotenv.config();
-connect();
+// connect();
 
 const app = express();
 
@@ -27,6 +31,14 @@ nunjucks.configure('views', {
     watch: true,
 });
 
+sequelize.sync({ force: true })
+    .then(() => {
+        console.log('데이터베이스 연결 성공');
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+
 //middleware
 app.use(morgan('dev'));
 app.use('/', express.static(path.join(__dirname, 'public')));
@@ -36,22 +48,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extend: false }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
-const sessionOption = {
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-        httpOnly: true,
-        secure: false,
-    },
-    name: 'session-cookie',
-};
+// const sessionOption = {
+//     resave: false,
+//     saveUninitialized: false,
+//     secret: process.env.COOKIE_SECRET,
+//     cookie: {
+//         httpOnly: true,
+//         secure: false,
+//     },
+//     name: 'session-cookie',
+// };
 //https 적용할때만
 // if (process.env.NODE_ENV === 'production') {
 //     sessionOption.proxy = true;
 //     sessionOption.cookie.secure = true;
 // }
-app.use(session(sessionOption));
+// app.use(session(sessionOption));
 app.use(passport.initialize());
 passportConfig();
 
@@ -70,7 +82,11 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
     res.locals.message = error.message;
-    console.log(error.message, error.status);
+    if (error.message.includes("로그인")) {
+        res.locals.login = true;
+    } else {
+        res.locals.login = false;
+    }
     res.locals.error = process.env.NODE_ENV !== 'production' ? error : {};
     res.status(error.status || 500);
     res.render('error');
