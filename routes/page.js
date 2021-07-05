@@ -5,20 +5,26 @@ moment.tz.setDefault("Asia/Seoul");
 
 const app = express();
 
-const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const Board = require('../schema/board');
-
+const { isLoggedIn, isNotLoggedIn } = require('../middlewares/isLoggedInOrisNotLoggedIn');
+const Board = require('../models/board');
+const User = require('../models/user');
 const router = express.Router();
 
 router.use((req, res, next) => {
-    res.locals.user = req.cookies
 
+    res.locals.user = req.cookies.user;
     next();
 });
 
 router.get('/', async (req, res) => {
     try {
-        const boards = await Board.find({}).populate('writer').sort({ createdAt: -1 });
+        const boards = await Board.findAll({
+            include: [{
+                model: User,
+                attribute: ['nickname'],
+            }],
+            order: [['createdAt', 'DESC']]
+        });
         res.render('board', { boards, moment });
     } catch (error) {
         console.error(error);
@@ -45,8 +51,8 @@ router.get('/create', isLoggedIn, (req, res) => {
 router.get('/update', isLoggedIn, (req, res, next) => {
 
     const board = app.get("board");
-    const { user: loginUser } = res.locals.user;
-    if (loginUser !== board.writer.id) {
+    const { id: userId } = res.locals.user;
+    if (userId !== board.User.id) {
         const error = new Error("접근권한이 없습니다.");
         error.status = 403;
         next(error);
@@ -59,7 +65,12 @@ router.get('/update', isLoggedIn, (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     const { id } = req.params;
     try {
-        const board = await Board.findOne({ id }).populate('writer');
+        const board = await Board.findByPk(id, {
+            include: [{
+                model: User,
+                attribute: ['nickname'],
+            }],
+        });
         app.set("board", board);
         res.render('boardDetail', { board, moment });
     } catch (error) {

@@ -4,7 +4,7 @@ module.exports = class Board extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             title: {
-                type: Sequelize.STRING(20),
+                type: Sequelize.STRING,
                 defaultValue: "제목없음"
             },
             description: {
@@ -12,7 +12,7 @@ module.exports = class Board extends Sequelize.Model {
                 defaultValue: "내용없음"
             },
             password: {
-                type: Sequelize.STRING(20),
+                type: Sequelize.STRING,
                 allowNull: false
             },
             url: {

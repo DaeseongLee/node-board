@@ -53,7 +53,7 @@ async function login(event) {
         }
         localStorage.setItem('token', result.data.token);
 
-        // location.replace("/");
+        location.replace("/");
     } catch (error) {
         console.error(error);
     }

@@ -8,7 +8,7 @@
             const title = document.querySelector('#title').value;
             const description = document.querySelector('#description').value;
             const password = document.querySelector('#password').value;
-            const url = document.querySelector('#img-url').value;
+            const url = document.querySelector('#img-url').value || document.querySelector('#preImageUrl').value
 
             const result = await axios({
                 method: "patch",
@@ -28,12 +28,7 @@
     }
     async function boardDelete(id) {
         try {
-
             const password = document.querySelector('#password').value;
-
-
-            // const result = await axios.delete(`/board/${id}/delete`, {password});
-
             const result = await axios({
                 method: "delete",
                 url: `/board/${id}/delete`,
@@ -66,6 +61,7 @@
                                 <div class="flex flex-auto max-h-48 w-2/5 mx-auto -mt-10">
                                     <img id="img-preview" class="h-36 object-center" src="{{board.url}}"
                                         alt="freepik image">
+
                                 </div>
                                 <p class="pointer-none text-gray-500 ">
                                     <span class="text-blue-600 hover:underline">select a file</span> from your computer
@@ -73,6 +69,7 @@
                             </div>
                             <input id="img" type="file" class="hidden" accept="image/*">
                             <input id="img-url" class="hidden" name="url">
+                            <input id="preImageUrl" class="hidden" name="preImageUrl" value="{{board.url}}">
                         </label>
                     </div>
                 </div>
@@ -82,7 +79,7 @@
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">제목</p>
                     <input class="text-3xl text-gray-900 border-4 border-black p-2 rounded-md w-full" id="title"
                         name="title" value="{{board.title}}" />
-                    <p class="text-gray-700"><span class="text-xs font-bold mr-1">작성자:</span>{{board.writer.id}}</p>
+                    <p class="text-gray-700"><span class="text-xs font-bold mr-1">작성자:</span>{{board.User.nickname}}</p>
                 </div>
                 <div class="h-56 p-4">
                     <p class="uppercase tracking-wide text-2xl font-bold text-blue-400">내용</p>

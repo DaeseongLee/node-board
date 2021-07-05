@@ -1,5 +1,4 @@
 const express = require("express");
-const app = express();
 exports.isLoggedIn = (req, res, next) => {
     const cookie = req.headers.cookie.split('=')[1];
     if (cookie !== 'undefined') {
@@ -14,8 +13,6 @@ exports.isLoggedIn = (req, res, next) => {
 exports.isNotLoggedIn = (req, res, next) => {
     let cookie = req.headers.cookie || "user=undefined";
     cookie = cookie.split('=')[1];
-    // const cookie = req.headers.cookie;
-    console.log(cookie);
     if (cookie === 'undefined') {
         next();
     } else {

@@ -4,7 +4,7 @@ const bycrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 
-const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const { isLoggedIn, isNotLoggedIn } = require('../middlewares/isLoggedInOrisNotLoggedIn');
 
 const User = require('../models/user');
 
@@ -22,7 +22,7 @@ const authenticateJWT = (req, res, next) =>
 
 
 router.get('/me', authenticateJWT, (req, res) => {
-    res.cookie("user", req.user);
+    res.cookie("user", { "nickname": req.user.nickname, "id": req.user.id });
     res.json({ "user": req.user });
 });
 
@@ -70,7 +70,6 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
                     console.error(loginError);
                     return next(loginError);
                 };
-
                 const token = jwt.sign({ nickname: user.nickname }, process.env.JWT_SECRET);
                 res.json({ token });
             });

@@ -33,15 +33,13 @@ const JWTConfig = { jwtFromRequest: ExtractJwt.fromHeader('authorization'), secr
 
 const JWTVerify = async (jwtPayload, done) => {
     try {
-        console.log("jwtPayload....", jwtPayload);
         const user = await User.findOne({
             where: {
                 nickname: jwtPayload.nickname
             }
         });
-        console.log("user.......", user);
         if (user) {
-            done(null, user.nickname);
+            done(null, user);
         } else {
             done(null, false, { message: "올바르지 않은 인증정보 입니다." });
         }

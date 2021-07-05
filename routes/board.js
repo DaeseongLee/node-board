@@ -1,15 +1,12 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 const passport = require('passport');
-const mongoose = require('mongoose');
-
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const Board = require('../schema/board');
-const User = require('../schema/user');
+const Board = require('../models/board');
+const User = require('../models/user');
 
 const router = express.Router();
 
@@ -40,30 +37,24 @@ const upload = multer({
 });
 
 router.post('/create/img', upload.single('img'), async (req, res, next) => {
-    console.log(req.file);
     res.json({ url: `/img/${req.file.filename}` });
 });
 
 
 const upload2 = multer();
-const ObjectId = mongoose.Types.ObjectId;
 router.post('/create', upload2.none(), async (req, res, next) => {
     try {
         let { title, description, password, url } = req.body;
-        const userInfo = await User.findOne({ id: req.cookies.user });
-        const writer = userInfo;
+        const userId = req.cookies.user.id;
         url = url || "/img/default.jpg";
         const hash = await bcrypt.hash(password, 12);
-        const board = await Board.create({
-            id: uuidv4(),
+        await Board.create({
             title,
             description,
             password: hash,
-            writer,
+            writer: userId,
             url,
-            createdAt: Date.now(),
         });
-        await Board.populate(board, { path: 'writer' });
         res.redirect('/');
     } catch (error) {
         console.error(error);
@@ -74,17 +65,16 @@ router.post('/create', upload2.none(), async (req, res, next) => {
 router.patch('/:id/update', async (req, res, next) => {
     const { id } = req.params;
     const { title, description, password: inputPassword, url } = req.body;
-
     try {
-        const { password } = await Board.findOne({ id });
+        const { password } = await Board.findByPk(id);
         const pwdChk = await bcrypt.compare(inputPassword, password);
         if (pwdChk) {
-            await Board.updateOne({
-                id
-            }, {
+            await Board.update({
                 title,
                 description,
                 url
+            }, {
+                where: { id }
             })
 
             res.json({ ok: true, url: `/${id}` });
@@ -102,11 +92,10 @@ router.delete('/:id/delete', async (req, res, next) => {
     const { id } = req.params;
     const { password: inputPassword } = req.body;
     try {
-        const { password } = await Board.findOne({ id });
-        console.log(inputPassword, password);
+        const { password } = await Board.findByPk(id);
         const pwdChk = await bcrypt.compare(inputPassword, password);
         if (pwdChk) {
-            await Board.remove({ id });
+            await Board.destroy({ where: { id } });
             res.json({ ok: true, url: `/` });
         } else {
             res.json({ ok: false, message: "비밀번호가 일치 하지 않습니다." });
