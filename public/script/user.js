@@ -67,8 +67,8 @@ async function login(event) {
 
 async function logout() {
     localStorage.clear();
-    const result = await axios.get('/user/logout');
-    location.href = "/login";
+    await axios.get('/user/logout');
+    location.href = '/login';
 }
 
 function loginForm() {

@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 exports.isLoggedIn = (req, res, next) => {
-    if (req.headers.cookie.user) {
+    const cookie = req.headers.cookie.split('=')[1];
+    if (cookie !== 'undefined') {
         next();
     } else {
         const error = new Error("로그인이 필요합니다");
@@ -11,8 +12,11 @@ exports.isLoggedIn = (req, res, next) => {
 }
 
 exports.isNotLoggedIn = (req, res, next) => {
-    console.log("!!!!", req.headers.cookie);
-    if (!req.headers.cookie.user) {
+    let cookie = req.headers.cookie || "user=undefined";
+    cookie = cookie.split('=')[1];
+    // const cookie = req.headers.cookie;
+    console.log(cookie);
+    if (cookie === 'undefined') {
         next();
     } else {
         const message = encodeURIComponent('로그인한 상태입니다.');

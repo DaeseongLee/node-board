@@ -7,7 +7,7 @@ const app = express();
 
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const User = require('../schema/user');
-const auth = require('../middlewares/auth');
+
 
 const router = express.Router();
 
@@ -18,7 +18,6 @@ const authenticateJWT = (req, res, next) =>
         }
         next();
     })(req, res, next);
-
 
 
 router.get('/me', authenticateJWT, (req, res) => {

@@ -1,12 +1,15 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const passport = require('passport');
+const mongoose = require('mongoose');
+
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
 const Board = require('../schema/board');
+const User = require('../schema/user');
 
 const router = express.Router();
 
@@ -43,11 +46,12 @@ router.post('/create/img', upload.single('img'), async (req, res, next) => {
 
 
 const upload2 = multer();
+const ObjectId = mongoose.Types.ObjectId;
 router.post('/create', upload2.none(), async (req, res, next) => {
     try {
         let { title, description, password, url } = req.body;
-        const writer = req.user;
-
+        const userInfo = await User.findOne({ id: req.cookies.user });
+        const writer = userInfo;
         url = url || "/img/default.jpg";
         const hash = await bcrypt.hash(password, 12);
         const board = await Board.create({

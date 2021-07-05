@@ -30,9 +30,8 @@ const JWTVerify = async (jwtPayload, done) => {
     try {
 
         const user = await User.findOne({ id: jwtPayload.id });
-        console.log("user!!", user);
         if (user) {
-            done(null, user);
+            done(null, user.id);
         } else {
             done(null, false, { message: "올바르지 않은 인증정보 입니다." });
         }
