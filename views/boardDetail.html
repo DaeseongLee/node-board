@@ -96,15 +96,27 @@
                         <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">
                             @{{comment.User.nickname}}</h3>
                     </div>
-                    <input type="text" style="width: 90%" class="text-gray-600 text-lg text-center md:text-left p-2"
-                        disabled value="{{comment.comment}}" />
-
-                    <div class="w-full flex justify-end">
-                        <button>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-green-400" fill="none"
+                    <div class="w-full flex">
+                        <input id="comment-{{comment.id}}" type="text" style="width: 90%"
+                            class="w-full text-gray-600 text-lg text-center md:text-left p-2" disabled
+                            value="{{comment.comment}}" />
+                        <div id="upt-{{comment.id}}" class="hidden"
+                            onclick="updateCommentConfirm('{{comment.id}}', '{{comment.board}}')">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-12 w-12 text-yellow-400 hover:text-yellow-600 cursor-pointer" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="w-full flex justify-end" id="btn-{{comment.id}}">
+                        <button onclick="updateComment('{{comment.id}}', '{{comment.commenter}}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-green-400" fill=none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                             </svg>
                         </button>
                         <button>
@@ -127,40 +139,49 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+    const loginUser = auth();
+
     function boardUpdate() {
         location.href = "/update"
     }
 
     async function addComment(id) {
-        let comment = $('#comment_content').val();
+        const loginUserInfo = await loginUser;
 
-        if (!comment.trim()) {
-            alert("댓글을 입력해 주세요.");
-            $('#comment_content').focus();
-            return;
-        }
-        try {
-            const result = await axios.post("/board/:id/comment", {
-                'boardId': id,
-                comment,
-            });
+        if (loginUserInfo) {
+            let comment = $('#comment_content').val();
+            if (!comment.trim()) {
+                alert("댓글을 입력해 주세요.");
+                $('#comment_content').focus();
+                return;
+            }
+            try {
+                const result = await axios.post("/board/:id/comment", {
+                    'boardId': id,
+                    comment,
+                });
 
-            if (result.data.ok) {
-
-                $('#comment_content').val('');
-                let temple = `<div class="bg-white rounded-lg p-3  flex flex-col justify-center items-center md:items-start shadow-lg mb-4">
+                console.log("result!!@!#", result);
+                if (result.data.ok) {
+                    $('#comment_content').val('');
+                    let temple = `<div class="bg-white rounded-lg p-3  flex flex-col justify-center items-center md:items-start shadow-lg mb-4">
                             <div class="mr-2">
                                 <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">@${result.data?.nickname}</h3>
                             </div>
-                            <input type="text" style="width: 90%" class="text-gray-600 text-lg text-center md:text-left p-2" disabled
-                                value=${result.data.comment?.comment} />
-
-                            <div class="w-full flex justify-end">
-                                <button>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-green-400" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                             <div class="w-full flex">
+                                <input id="comment-${result.data.comment?.id}" type="text" style="width: 90%" 
+                                    class="w-full text-gray-600 text-lg text-center md:text-left p-2" disabled
+                                value="${result.data.comment?.comment}" />
+                                <div id="upt-${result.data.comment?.id}" class="hidden" onclick="updateCommentConfirm('${result.data.comment?.id}', '${result.data.comment?.board}')">
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-yellow-400 hover:text-yellow-600 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                </div>
+                            </div>
+                            <div class="w-full flex justify-end" id="btn-${result.data.comment?.id}">
+                                <button onclick="updateComment('${result.data.comment?.id}', '${result.data.comment?.commenter}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-green-400 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                     </svg>
                                 </button>
                                 <button>
@@ -172,16 +193,69 @@
                                 </button>
                             </div>
                         </div>`
-                $("#task-comments").prepend(temple);
-            } else {
-                location.href = "/loginError";
+                    $("#task-comments").prepend(temple);
+                }
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
+        } else {
+            location.href = "/loginError";
         }
 
     }
 
-    auth();
+    async function updateComment(id, commenter) {
+        const loginUserInfo = await loginUser;
+        console.log("loginUserInfo!!!", loginUserInfo);
+        console.log("commenter!!!", commenter);
+        if (loginUserInfo) {
+            if (loginUserInfo.id !== +commenter) {
+                alert("댓글 작성자만 수정할 수 있습니다.");
+                return;
+            }
+            btnControl(id);
+        } else {
+            location.href = "/loginError";
+        }
+    };
+
+    async function updateCommentConfirm(commentId, boardId) {
+        try {
+            const commentInput = "comment-" + commentId;
+            const comment = $(`#${commentInput}`).val();
+
+            const result = await axios.patch(`/board/${boardId}/comment`, {
+                comment,
+                commentId,
+            });
+            if (result.data.ok) {
+                reverseBtnControl(commentId);
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    function btnControl(id) {
+        const commentId = "comment-" + id;
+        const btnId = "btn-" + id;
+        const uptId = "upt-" + id;
+        $(`#${commentId}`).removeAttr("disabled");
+        $(`#${commentId}`).focus();
+        $(`#${btnId}`).addClass("hidden");
+        $(`#${uptId}`).removeClass("hidden");
+    };
+
+    function reverseBtnControl(id) {
+        const commentId = "comment-" + id;
+        const btnId = "btn-" + id;
+        const uptId = "upt-" + id;
+        $(`#${commentId}`).attr("disabled", true);
+
+        $(`#${btnId}`).removeClass("hidden");
+        $(`#${uptId}`).addClass("hidden");
+    };
+
 </script>
 {% endblock %}

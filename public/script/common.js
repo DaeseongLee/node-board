@@ -15,8 +15,9 @@ async function auth() {
         } else {
             logoutbtnText.textContent = 'LogOut'
             logoutbtn.addEventListener('click', logout);
-        }
 
+            return result.data.user
+        }
     } catch (error) {
         console.error(error);
     }

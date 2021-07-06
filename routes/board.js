@@ -111,7 +111,6 @@ router.delete('/:id/delete', async (req, res, next) => {
 router.post('/:id/comment', async (req, res, next) => {
     const { boardId, comment } = req.body;
     const userId = req.cookies.user?.id;
-
     if (userId) {
         try {
             const result = await Comment.create({
@@ -120,14 +119,30 @@ router.post('/:id/comment', async (req, res, next) => {
                 commenter: userId,
             });
             const nickname = req.cookies.user.nickname;
+            console.log("AddComment!!!", result);
             res.json({ "ok": true, "comment": result, nickname });
         } catch (error) {
             console.error(error);
             next(error);
         };
-    } else {
-        res.json({ "ok": false, "message": "로그인이 필요합니다." });
     }
+});
+
+router.patch('/:id/comment', async (req, res, next) => {
+    const { id } = req.params;
+    const { comment, commentId } = req.body;
+    try {
+        const result = await Comment.update({
+            comment,
+        }, {
+            where: { id: commentId }
+        });
+        res.json({ "ok": true, "comment": result });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    };
+
 });
 
 module.exports = router;

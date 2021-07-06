@@ -82,7 +82,8 @@ router.get('/:id', async (req, res, next) => {
             include: [{
                 model: User,
                 attribute: ['nickname'],
-            }]
+            }],
+            order: [['createdAt', 'DESC']]
         });
         app.set("board", board);
         res.render('boardDetail', { board, comments, moment });
