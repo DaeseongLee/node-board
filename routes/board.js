@@ -7,14 +7,15 @@ const fs = require('fs');
 
 const Board = require('../models/board');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 
 const router = express.Router();
 
 
-router.use((req, res, next) => {
-    passport.authenticate('jwt', { session: false });
-    next();
-});
+// router.use((req, res, next) => {
+//     passport.authenticate('jwt', { session: false });
+//     next();
+// });
 
 try {
     fs.readdirSync('uploads');
@@ -105,4 +106,23 @@ router.delete('/:id/delete', async (req, res, next) => {
         next(error);
     }
 });
+
+
+router.post('/:id/comment', async (req, res, next) => {
+    const { boardId, comment } = req.body;
+    const userId = req.cookies.user.id;
+    try {
+        const result = await Comment.create({
+            comment,
+            board: boardId,
+            commenter: userId,
+        });
+        const nickname = req.cookies.user.nickname;
+        res.json({ "ok": true, "comment": result, nickname });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    };
+});
+
 module.exports = router;

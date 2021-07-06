@@ -81,6 +81,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
+
     res.locals.message = error.message;
     if (error.message.includes("로그인")) {
         res.locals.login = true;

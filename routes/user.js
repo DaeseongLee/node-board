@@ -9,19 +9,22 @@ const { isLoggedIn, isNotLoggedIn } = require('../middlewares/isLoggedInOrisNotL
 const User = require('../models/user');
 
 
-
 const router = express.Router();
 
+
 const authenticateJWT = (req, res, next) =>
-    passport.authenticate("jwt", { sessions: false }, (error, user) => {
+    passport.authenticate("jwt", { sessions: false }, (error, user, message) => {
         if (user) {
             req.user = user;
+            next();
+        } else {
+            res.redirect("/")
         }
-        next();
     })(req, res, next);
 
 
 router.get('/me', authenticateJWT, (req, res) => {
+
     res.cookie("user", { "nickname": req.user.nickname, "id": req.user.id });
     res.json({ "user": req.user });
 });

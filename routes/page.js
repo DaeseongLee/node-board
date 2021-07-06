@@ -8,6 +8,7 @@ const app = express();
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares/isLoggedInOrisNotLoggedIn');
 const Board = require('../models/board');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 const router = express.Router();
 
 router.use((req, res, next) => {
@@ -71,8 +72,14 @@ router.get('/:id', async (req, res, next) => {
                 attribute: ['nickname'],
             }],
         });
+        const comments = await board.getComments({
+            include: [{
+                model: User,
+                attribute: ['nickname'],
+            }]
+        });
         app.set("board", board);
-        res.render('boardDetail', { board, moment });
+        res.render('boardDetail', { board, comments, moment });
     } catch (error) {
         console.error(error);
         next(error)

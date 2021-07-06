@@ -1,7 +1,9 @@
 async function auth() {
+
+    const token = localStorage.getItem("token");
     try {
         const result = await axios.get('/user/me', {
-            headers: { "authorization": `${localStorage.getItem("token")}` }
+            headers: { "authorization": token }
         });
         const logoutbtnText = document.querySelector("#logoutText");
         const logoutbtn = document.querySelector("#loginOrlogout");

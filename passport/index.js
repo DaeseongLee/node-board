@@ -33,9 +33,10 @@ const JWTConfig = { jwtFromRequest: ExtractJwt.fromHeader('authorization'), secr
 
 const JWTVerify = async (jwtPayload, done) => {
     try {
+        const nickname = jwtPayload.nickname;
         const user = await User.findOne({
             where: {
-                nickname: jwtPayload.nickname
+                nickname
             }
         });
         if (user) {
