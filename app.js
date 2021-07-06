@@ -88,7 +88,7 @@ app.use((error, req, res, next) => {
     } else {
         res.locals.login = false;
     }
-    res.locals.error = process.env.NODE_ENV !== 'production' ? error : {};
+    res.locals.error = error;
     res.status(error.status || 500);
     res.render('error');
 });

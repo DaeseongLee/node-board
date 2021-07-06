@@ -46,6 +46,12 @@ router.get('/create', isLoggedIn, (req, res) => {
     res.render('createBoard');
 });
 
+router.get('/loginError', (req, res) => {
+    res.locals.error = { "status": 403 }
+    res.locals.message = "로그인이 필요합니다";
+    res.locals.login = true;
+    res.render("error")
+});
 
 
 //게시글 수정

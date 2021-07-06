@@ -45,7 +45,7 @@ const JWTVerify = async (jwtPayload, done) => {
             done(null, false, { message: "올바르지 않은 인증정보 입니다." });
         }
     } catch (error) {
-        console.error(error);
+        console.error("authentication Error!!!", error);
         done(error);
     }
 }

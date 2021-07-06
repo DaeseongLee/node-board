@@ -134,20 +134,26 @@
     async function addComment(id) {
         let comment = $('#comment_content').val();
 
+        if (!comment.trim()) {
+            alert("댓글을 입력해 주세요.");
+            $('#comment_content').focus();
+            return;
+        }
         try {
             const result = await axios.post("/board/:id/comment", {
                 'boardId': id,
                 comment,
             });
 
-            $('#comment_content').val('');
+            if (result.data.ok) {
 
-            let temple = `<div class="bg-white rounded-lg p-3  flex flex-col justify-center items-center md:items-start shadow-lg mb-4">
+                $('#comment_content').val('');
+                let temple = `<div class="bg-white rounded-lg p-3  flex flex-col justify-center items-center md:items-start shadow-lg mb-4">
                             <div class="mr-2">
-                                <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">@${result.data.nickname}</h3>
+                                <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">@${result.data?.nickname}</h3>
                             </div>
                             <input type="text" style="width: 90%" class="text-gray-600 text-lg text-center md:text-left p-2" disabled
-                                value=${result.data.comment.comment} />
+                                value=${result.data.comment?.comment} />
 
                             <div class="w-full flex justify-end">
                                 <button>
@@ -166,10 +172,16 @@
                                 </button>
                             </div>
                         </div>`
-            $("#task-comments").prepend(temple);
+                $("#task-comments").prepend(temple);
+            } else {
+                location.href = "/loginError";
+            }
         } catch (error) {
             console.error(error);
         }
+
     }
+
+    auth();
 </script>
 {% endblock %}

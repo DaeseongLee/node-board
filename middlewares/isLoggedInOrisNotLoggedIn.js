@@ -1,7 +1,9 @@
 const express = require("express");
 exports.isLoggedIn = (req, res, next) => {
-    const cookie = req.headers.cookie.split('=')[1];
-    if (cookie !== 'undefined') {
+    console.log("cookie", req.header.cookie);
+    const cookie = req.headers.cookie?.split('=')[1];
+    console.log("cookie!@!@", cookie);
+    if (cookie) {
         next();
     } else {
         const error = new Error("로그인이 필요합니다");
