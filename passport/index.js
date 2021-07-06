@@ -19,10 +19,10 @@ const passportVerify = async (nickname, password, done) => {
             if (result) {
                 done(null, existUser);
             } else {
-                done(null, false, { message: "비밀번호가 일치하지 않습니다." });
+                done(null, false, { message: "닉네임 또는 패스워드를 확인 해주세요." });
             }
         } else {
-            done(null, false, { message: "가입되지 않은 회원입니다." })
+            done(null, false, { message: "닉네임 또는 패스워드를 확인 해주세요." })
         }
     } catch (error) {
         console.error(error);

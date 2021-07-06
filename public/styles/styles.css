@@ -762,7 +762,7 @@ video {
 }
 
 .formWrapper {
-  margin-top: 2.5rem;
+  margin-top: 6rem;
   display: flex;
   width: 100%;
   max-width: 36rem;
@@ -796,7 +796,6 @@ video {
 }
 
 .headerLink{
-  margin-right: 1rem;
   display: flex;
   cursor: pointer;
   justify-content: center;
@@ -811,12 +810,6 @@ video {
 
 .headerLink {
   text-align: center;
-}
-
-@media (min-width: 1280px) {
-  .headerLink {
-    margin-left: 1.75rem;
-  }
 }
 
 .headerIcon{

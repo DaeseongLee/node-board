@@ -56,7 +56,6 @@ router.get('/loginError', (req, res) => {
 
 //게시글 수정
 router.get('/update', isLoggedIn, (req, res, next) => {
-
     const board = app.get("board");
     const { id: userId } = res.locals.user;
     if (userId !== board.User.id) {
@@ -78,15 +77,20 @@ router.get('/:id', async (req, res, next) => {
                 attribute: ['nickname'],
             }],
         });
-        const comments = await board.getComments({
-            include: [{
-                model: User,
-                attribute: ['nickname'],
-            }],
-            order: [['createdAt', 'DESC']]
-        });
-        app.set("board", board);
-        res.render('boardDetail', { board, comments, moment });
+        if (board) {
+            const comments = await board.getComments({
+                include: [{
+                    model: User,
+                    attribute: ['nickname'],
+                }],
+                order: [['createdAt', 'DESC']]
+            });
+            app.set("board", board);
+            res.render('boardDetail', { board, comments, moment });
+        } else {
+            const error = new Error("해당하는 게시글이 없습니다.");
+            next(error);
+        }
     } catch (error) {
         console.error(error);
         next(error)

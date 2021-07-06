@@ -129,7 +129,6 @@ router.post('/:id/comment', async (req, res, next) => {
 });
 
 router.patch('/:id/comment', async (req, res, next) => {
-    const { id } = req.params;
     const { comment, commentId } = req.body;
     try {
         const result = await Comment.update({
@@ -138,6 +137,19 @@ router.patch('/:id/comment', async (req, res, next) => {
             where: { id: commentId }
         });
         res.json({ "ok": true, "comment": result });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    };
+});
+
+router.delete('/comment', async (req, res, next) => {
+    const { commentId } = req.body;
+    try {
+        const result = await Comment.destroy({
+            where: { id: commentId }
+        });
+        res.json({ "ok": true, result });
     } catch (error) {
         console.error(error);
         next(error);

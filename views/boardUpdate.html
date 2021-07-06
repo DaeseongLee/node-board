@@ -121,4 +121,17 @@
         </div>
     </div>
 </div>
+<script>
+    const loginUser = auth();
+
+    (async function getUser() {
+        const user = await loginUser;
+        console.log("user!@#!@#", user)
+        if (user) {
+            const userDisplay = document.querySelector('#loginUser');
+            userDisplay.textContent = user.nickname;
+
+        }
+    })();
+</script>
 {% endblock %}
