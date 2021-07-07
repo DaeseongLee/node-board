@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares/isLoggedInOrisNotLoggedIn');
+const { validate } = require('../middlewares/validate');
 
 const User = require('../models/user');
 
@@ -30,7 +31,7 @@ router.get('/me', authenticateJWT, (req, res) => {
 });
 
 
-router.post('/join', isNotLoggedIn, async (req, res, next) => {
+router.post('/join', isNotLoggedIn, validate, async (req, res, next) => {
     try {
         const { nickname, password } = req.body;
         const existUser = await User.findOne({
@@ -40,7 +41,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
         })
         console.log("existUser", existUser);
         if (existUser) {
-            res.json('nickname already exists');
+            res.json({ "ok": false, "message": 'nickname already exists' });
             return;
         }
         const hash = await bycrypt.hash(password, 12);

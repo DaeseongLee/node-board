@@ -1,8 +1,6 @@
 const express = require("express");
 exports.isLoggedIn = (req, res, next) => {
-    console.log("cookie", req.header.cookie);
     const cookie = req.headers.cookie?.split('=')[1];
-    console.log("cookie!@!@", cookie);
     if (cookie) {
         next();
     } else {

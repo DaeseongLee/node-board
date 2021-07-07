@@ -14,7 +14,7 @@ async function createAccount(event) {
             alert('회원가입을 하였습니다.');
             location.replace("/login");
         } else {
-            alert('이미 존재하는 아이디 입니다.');
+            alert(result.data.message);
         }
     } catch (error) {
         console.error(error);
