@@ -20,12 +20,11 @@ exports.validate = (req, res, next) => {
                 if (value.includes(req.body.nickname)) {
                     return helper.message("닉네임과 같은 값이 비밀번호에 포함되면 안됩니다.");
                 }
-            })
-            .messages({
-                'string.min': `비밀번호는 4자 이상이어야 합니다.`,
             }),
     });
+
     const result = schema.validate(req.body);
+
     if (result.error) {
         res.json({ "ok": false, "message": result.error.message })
     } else {
