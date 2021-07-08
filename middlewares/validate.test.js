@@ -1,5 +1,4 @@
 const { validate } = require('./validate');
-const Joi = require('joi');
 
 describe('validate', () => {
     let res, next;
